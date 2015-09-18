@@ -1,0 +1,391 @@
+ <br>
+   <div class="container">
+  <div class="row">
+    <div class="col-md-9 col-xs-12">
+      <div class="well panel panel-default">
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 col-sm-4 text-center">
+              
+              <ul class="list-inline ratings text-center" title="Ratings">
+                <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+              </ul>
+            </div>
+            <!--/col--> 
+            <div class="col-xs-12 col-sm-8">
+              <h2><?php if(isset($profile_data)){ echo "".$profile_data["First_Name"]."  ".$profile_data["Last_Name"]; } ?></h2>
+              <p><strong>About: </strong> <?php if(isset($profile_data)){ echo "".$profile_data["Description"]."  ".$profile_data["Description"]; } ?> </p>
+              <p><strong>Hobbies: </strong> Read, out with friends, listen to music, draw and learn new things. </p>
+              <p><strong>Skills: </strong>
+                <?php 
+                  $query = mysql_query("select skills.Skill_Name FROM skills,skill_map WHERE skills.id = skill_map.Skill_id AND skill_map.User_id =".$userid);
+                  $count = mysql_num_rows($query);
+                  if ($count > 0) { 
+                    while($row=mysql_fetch_array($query))
+                    {
+                      echo '&nbsp; <span class="label label-info tags" >'.$row["Skill_Name"].'</span>';
+                    }     
+                  }                        
+                ?>
+              </p>
+            </div>
+            <!--/col-->          
+            <div class="clearfix"></div>
+            <div class="col-xs-12 col-sm-4">
+              <h2><strong> 20,7K </strong></h2>
+              <p><small>Followers</small></p>
+              <button class="btn btn-success btn-block"><span class="fa fa-plus-circle"></span> Follow </button>
+            </div>
+            <!--/col-->
+            <div class="col-xs-12 col-sm-4">
+              <h2><strong>245</strong></h2>
+              <p><small>Following</small></p>
+              
+              <a href="<?php echo PG.'updateprofile.php'; ?>" data-jkit="[lightbox]" title="Update Profile">
+                  <button class="btn btn-info btn-block"><span class="fa fa-user"></span> Update Profile </button>
+              </a>
+            </div>
+            <!--/col-->
+            <div class="col-xs-12 col-sm-4">
+              <h2><strong>43</strong></h2>
+              <p><small>Snippets</small></p>
+              <button type="button" class="btn btn-primary btn-block"><span class="fa fa-gear"></span> Options </button>  
+            </div>
+            <!--/col-->
+          </div>
+          <!--/row-->
+        </div>
+        <!--/panel-body-->
+      </div>
+      <!--/panel-->
+    </div>
+    <!--/col--> 
+  </div>
+  <!--/row--> 
+</div>
+
+<?php 
+  include_once("../include/config.php");
+
+  $User_basic;
+  $user_detail;
+
+  if (isset($_SESSION["User_info"]) && isset( $_SESSION["user_detail"])) {
+
+        $User_basic = $_SESSION["User_info"];
+        $user_detail =  $_SESSION["user_detail"];
+
+          if ($user_detail["User_id"] != $User_basic["User_id"]) {
+
+              die("Invalid User...");
+          }
+          else{
+
+          }
+
+        
+  }
+  else{
+    header('"location:'.INC.'controller.php?action=user_logout');
+  }
+
+?>
+
+==================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="../assets/profile/css//bootstrap-3.2.0.min.css">
+  <link rel="stylesheet" type="text/css" href="../assets/profile/css/font-awesome-4.1.0.min.css">
+  <script src="../assets/profile/js/jquery.js"> </script>
+  <script src="../assets/profile/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+    var infolinks_pid = 2113816;
+    var infolinks_wsid = 1;
+  </script>
+  
+</head>
+<body>
+<div class="container" style="padding-top: 0px;">
+  <h1 class="page-header">Update Profile <?php if(isset($user_detail)){ echo "".$user_detail["First_Name"]."  ".$user_detail["Last_Name"]; } ?></h1>
+  <div class="row">
+    <!-- left column -->
+    <div class="col-md-4 col-sm-6 col-xs-12">
+      <div class="text-center">
+        <img src="<?php if(isset($user_detail)){ echo "../".U_IMG.$user_detail["Image"]; } ?>" class="avatar img-circle img-thumbnail" alt="avatar">
+        <h6>Upload a New photo...</h6>
+        <input type="file" class="text-center center-block well well-sm">
+      </div>
+    </div>
+    <!-- edit form column -->
+    <div class="col-md-8 col-sm-6 col-xs-12 personal-info">
+      <?php
+        if (isset($_REQUEST['error_msg'])) {
+          echo '<div class="alert alert-info alert-dismissable">
+        <a class="panel-close close" data-dismiss="alert">×</a> 
+        <i class="icon-error"></i>
+         <strong>'.$_REQUEST["error_msg"].'</strong>.
+      </div>';
+        }
+
+      ?>
+      <h3>Personal info</h3>
+      <form class="form-horizontal" role="form">
+        <div class="form-group">
+          <label class="col-lg-3 control-label">First name: <?php if(isset($user_detail)){ echo "".$user_detail["First_Name"]."  ".$user_detail["Last_Name"]; } ?></label>
+          <div class="col-lg-8">
+            <input class="form-control" value="" type="text">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Last name:</label>
+          <div class="col-lg-8">
+            <input class="form-control" value="Bishop" type="text">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">About :</label>
+          <div class="col-lg-8">
+            <textarea class="form-control" value="" type="text"></textarea>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Skills :</label>
+          <div class="col-lg-8">
+                <span class="label label-info tags" ><input type="checkbox" style="top-margin:15px;" value="option1" checked>Checkbox1</span>
+                <span class="label label-info tags" ><input type="checkbox" style="top-margin:15px;" value="option1" checked>Checkbox2</span>
+                <span class="label label-info tags" ><input type="checkbox" style="top-margin:15px;" value="option1" checked>Checkbox3</span>
+                <span class="label label-info tags" ><input type="checkbox" style="top-margin:15px;" value="option1" checked>Checkbox4</span>
+                <span class="label label-info tags" ><input type="checkbox" style="top-margin:15px;" value="option1" checked>Checkbox5</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-lg-3 control-label">Email:</label>
+          <div class="col-lg-8">
+            <input class="form-control" value="janesemail@gmail.com" type="text">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="col-md-3 control-label">Username:</label>
+          <div class="col-md-8">
+            <input class="form-control" value="janeuser" type="text">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-md-3 control-label">Password:</label>
+          <div class="col-md-8">
+            <input class="btn btn-info" value="Request For Password Change" type="button">
+          </div>
+        </div>
+        <!-- <div class="form-group">
+          <label class="col-md-3 control-label">Confirm password:</label>
+          <div class="col-md-8">
+            <input class="form-control" value="11111122333" type="password">
+          </div>
+        </div> -->
+        <div class="form-group">
+          <label class="col-md-3 control-label"></label>
+          <div class="col-md-8">
+            <input class="btn btn-primary" value="Save Changes" type="button">
+            <span></span>
+            <input class="btn btn-default" value="Cancel" type="reset">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<input type="hidden" name="IL_IN_TAG" value="2">
+</body>
+
+
+</html>
+
+
+
+
+
+$query = mysql_query("select * FROM skills WHERE IsActive = 1");
+                 
+                  $count = mysql_num_rows($query);
+                  $count2 = mysql_num_rows($query2);
+                  if ($count > 0) { 
+                  while($row=mysql_fetch_array($query))
+                  {
+                    //echo '<script>window.alert("'.$row["Skill_Name"].' row data")</script>';
+                    if ($count2 > 0) { 
+                        $a = 0;  
+                    while($row2=mysql_fetch_row($query2))
+                    {
+                        echo '<script>window.alert("'.$row2[$a].$a;' row2 data")</script>';
+                        
+                        if ($row["Skill_Name"] == $row2[$a]) {
+
+                            echo '&nbsp; <span class="label label-info tags"><input type="checkbox" style="top-margin:15px;" value="option1" checked >'.$row["Skill_Name"].'</span>';
+                            continue;
+
+                        }
+                        else
+                        {
+                            //echo '&nbsp; <span class="label label-info tags"><input type="checkbox" style="top-margin:15px;" value="option1">'.$row["Skill_Name"].'</span>';
+                            
+                        }
+                        $a++;
+                     }
+                    }
+                    }     
+                  }                
+
+
+
+
+
+
+
+
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<script type="text/javascript" src="../assets/uploadForm/js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="../assets/uploadForm/js/jquery.form.min.js"></script>
+
+
+<link rel="stylesheet" type="text/css" href="../assets/profile/css//bootstrap-3.2.0.min.css">
+  <link rel="stylesheet" type="text/css" href="../assets/profile/css/font-awesome-4.1.0.min.css">
+
+<style type="text/css">
+/*#upload-wrapper {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 50px;
+  /*background: #52B8EB;*/
+  /*padding: 50px;
+  border-radius: 10px;
+}
+#upload-wrapper h3 {
+  padding: 0px 0px 10px 0px;
+  margin: 0px 0px 20px 0px;
+  margin-top: -30px;
+  border-bottom: 1px dotted #DDD;
+}
+#upload-wrapper input[type=file] {
+  padding: 6px;
+  background: #FFF;
+  border-radius: 5px;
+}*/
+/* prograss bar */
+#progressbox {
+  border: 1px solid #CAF2FF;
+  padding: 1px; 
+  position:relative;
+  /*width:400px;*/
+  width: auto;
+  border-radius: 3px;
+  margin: 10px;
+  display:none;
+  text-align:left;
+}
+#progressbar {
+  height:20px;
+  border-radius: 3px;
+  background-color: #CAF2FF;
+  width:1%;
+}
+#statustxt {
+  top:3px;
+  left:50%;
+  position:absolute;
+  display:inline-block;
+  color: #FFFFFF;
+}
+</style>
+<!-- <link href="../assets/uploadForm/style/style.css" rel="stylesheet" type="text/css"> -->
+</head>
+<body>
+<div class="container" >
+  <?php if (isset($_REQUEST["msg"])) { 
+echo '<div id="info-unit"> <div class="alert alert-block alert-info fade in">
+<button type="button" class="close" data-dismiss="alert">×</button>
+<h4 class="alert-heading">'.$_REQUEST["msg"].'</h4>
+</div>
+</div>';}
+?>
+  <h1 class="page-header">Upload New Tutorial </h1>
+  <div class="row" >
+    <form class="form-horizontal" role="form" action="<?php echo '../index.php?action=upload_video'; ?>" method="post" id="MyUploadForm" enctype="multipart/form-data">
+    <div class="col-md-6 col-sm-6 col-xs-10 ">
+      
+      <h3>Upload a new video..</h3>
+    <!-- <form action="../index.php?action=upload_video" method="post" enctype="multipart/form-data" > -->
+    
+    <input name="U_video" id="FileInput" type="file" class="text-center  well well-sm" />
+    
+    </div>
+    
+    <div class="col-md-6 col-sm-6 col-xs-12 ">
+      <!-- <h3>Personal info</h3> -->
+      
+        <input type="hidden" name="User_id" value="<?php if(isset($User_basic)){ echo "".$User_basic["User_id"]; } ?>" >
+        <div class="form-group">
+          <!-- <label class="col-lg-3 control-label">Title :</label> -->
+          <div class="col-lg-8">
+            <input class="form-control" name="title" value="<?php if(isset($user_detail)){ echo "".$user_detail[""]; } ?>" type="text" placeholder="Enter Video Title ">
+          </div>
+        </div>
+        <div class="form-group">
+          <!-- <label class="col-lg-3 control-label">Description :</label> -->
+          <div class="col-lg-8">
+            <textarea class="form-control" name="description" type="text" placeholder="Enter About Video"><?php if(isset($user_detail)){ echo "".$user_detail["Description"]; } ?></textarea>
+          </div>
+        </div>
+        <input type="submit"  id="submit-btn" value="Upload" class="btn btn-primary" />
+    <img src="../assets/uploadForm/images/ajax-loader.gif" id="loading-img" style="display:none;" alt="Please Wait"/>
+    <div id="progressbox" ><div id="progressbar"></div ><div id="statustxt">0%</div></div>
+    <div id="output"></div>
+  
+        <!-- <div class="form-group">
+          <label class="col-md-3 control-label"></label>
+          <div class="col-md-8">
+            <input class="btn btn-primary" value="Save Changes" type="submit">
+            <span></span>
+            <input class="btn btn-default" value="Cancel" type="reset">
+          </div>
+        </div> -->
+      </form>
+    </div>
+  </div>
+
+
+
+<!-- <div id="upload-wrapper">
+<div align="center">
+<h3>Upload a new video..</h3>
+<form action="../index.php?action=upload_video" method="post" enctype="multipart/form-data" id="MyUploadForm">
+<input name="FileInput" id="FileInput" type="file" /><br>
+ <input name="VideoName" id="VideoName" type="text" /> 
+<input type="submit"  id="submit-btn" value="Upload" />
+<img src="../assets/uploadForm/images/ajax-loader.gif" id="loading-img" style="display:none;" alt="Please Wait"/>
+</form>
+<div id="progressbox" ><div id="progressbar"></div ><div id="statustxt">0%</div></div>
+<div id="output"></div>
+</div>
+</div> -->
+<script src="../assets/profile/js/jquery.js"> </script>
+<script src="../assets/profile/js/bootstrap.min.js"> </script>
+<script type="text/javascript">
+    var infolinks_pid = 2113816;
+    var infolinks_wsid = 1;
+</script>
+</body>
+</html>
